@@ -24,6 +24,7 @@ function DisplayTodo() {
     const [typeFilter, setTypeFilter] = useState('RH')
     const [isDoneFilter, setIsDoneFilter] = useState('true')
     const [filteredTodo, setFilteredTodo] = useState()
+    const [specialFilter, setspecialFilter] = useState(false)
 
     const {loading, data } = useQuery(GET_TODO_LIST, {
 		variables: { orderBy: Ordering.DATE_ASC},
@@ -109,25 +110,41 @@ function DisplayTodo() {
     function onFilter(isF) {
         setIsfiltered(isF)
         console.log(creationFilter , typeFilter , isDoneFilter)
+        console.log(`special: ${specialFilter}`)
     }
 
     function fullfilter() {
 
-        let finalList = todoList
-        let donefilter = false
-        if (isDoneFilter === 'false')
-            donefilter = false
-        if (isDoneFilter === 'true')
-            donefilter = true
-        console.log(donefilter)
-        setFilteredTodo(
-            finalList.filter(todo => todo.isDone === donefilter).map((elem) => {
-                return(elem)
-            }).filter(todo => todo.type === typeFilter).map((elem) => {
-                return(elem)
-            })
-        )
-        console.log(filteredTodo)
+        if (!specialFilter) {
+            let finalList = todoList
+            let donefilter = false
+            if (isDoneFilter === 'false')
+                donefilter = false
+            if (isDoneFilter === 'true')
+                donefilter = true
+            setFilteredTodo(
+                finalList.filter(todo => todo.isDone === donefilter).map((elem) => {
+                    return(elem)
+                }).filter(todo => todo.type === typeFilter).map((elem) => {
+                    return(elem)
+                })
+            )
+        } else {
+            let finalList = todoList
+            let donefilter = false
+            if (isDoneFilter === 'false')
+                donefilter = false
+            if (isDoneFilter === 'true')
+                donefilter = true
+            setFilteredTodo(
+                finalList.filter(todo => todo.isDone === donefilter).map((elem) => {
+                    return(elem)
+                }).filter(todo => { if (todo.type === 'Communication' || todo.type === 'Marketing') return (todo)}).map((elem) => {
+                    return(elem)
+                })
+            )
+        }
+        // console.log(filteredTodo)
     }
 
     if (goToDetails)
@@ -164,6 +181,8 @@ function DisplayTodo() {
                     <option value='true'>Is Done</option>
                     <option value='false'>Is Not Done</option>
                 </select>
+
+                <input type="checkbox" onChange={() => {setspecialFilter(!(specialFilter))}}></input>
 
                 <button onClick={() => {onFilter(true); fullfilter()}}>Filter</button>
                 <button onClick={() => onFilter(false)}>Reset Filter</button>
