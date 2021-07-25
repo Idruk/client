@@ -1,0 +1,20 @@
+type Todo {
+    id: ID!
+    createdAt: DateTime!
+    type: TodoTypes!
+    isDone: Boolean!
+    text: String
+    title: String!
+  }
+  
+  enum TodoTypes {
+    RH
+    Tech
+    Marketing
+    Communication
+  }
+  
+  enum Ordering {
+    DATE_DESC
+    DATE_ASC
+  }
